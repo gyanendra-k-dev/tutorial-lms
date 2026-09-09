@@ -1,0 +1,27 @@
+"use client";
+
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
+import React, { useEffect } from "react";
+
+function Provider({ children }) {
+  const { user } = useUser();
+
+  useEffect(() => {
+    if (user) {
+      CheckIsNewUser();
+    }
+  }, [user]);
+
+  const CheckIsNewUser = async () => {
+    try {
+      await axios.post('/api/create-user', { user: user });
+    } catch (error) {
+      console.error("Error checking/creating user:", error.message);
+    }
+  };
+
+  return <div>{children}</div>;
+}
+
+export default Provider;
